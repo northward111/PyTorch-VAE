@@ -13,7 +13,7 @@ from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
 from dataset import VAEDataset
 from pytorch_lightning.plugins import DDPPlugin
 
-
+os.environ["PL_TORCH_DISTRIBUTED_BACKEND"] = "gloo"
 parser = argparse.ArgumentParser(description='Generic runner for VAE models')
 parser.add_argument('--config',  '-c',
                     dest="filename",
@@ -50,7 +50,8 @@ runner = Trainer(logger=tb_logger,
                                      monitor= "val_loss",
                                      save_last= True),
                  ],
-                 strategy=DDPPlugin(find_unused_parameters=False),
+                 # 分布式训练有问题，暂时先注释掉
+                 # strategy=DDPPlugin(find_unused_parameters=False),
                  **config['trainer_params'])
 
 
